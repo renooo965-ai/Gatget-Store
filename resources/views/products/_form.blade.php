@@ -29,9 +29,17 @@
 <input type="number" min="0" step="0.01" name="price" class="form-control" value="{{ old('price',$product->price ?? '') }}">
 </div>
 <div class="col-md-6">
-<label>Stok</label>
-<input type="number" min="0" name="stock" class="form-control" value="{{ old('stock',$product->stock ?? 0) }}">
+<label>Gambar Produk</label>
+<input type="file" name="image" class="form-control" accept="image/*">
+<small class="text-muted">Format: JPG, JPEG, PNG, WEBP. Maksimal 5MB.</small>
+@error('image')
+<small class="text-danger">{{ $message }}</small>
+@enderror
+@if(!empty($product->image))
+<div class="mt-2">
+    <img src="{{ asset('storage/'.$product->image) }}" alt="Gambar Produk" class="img-thumbnail" style="max-width: 100px;">
 </div>
+@endif
 <div class="col-12">
 <label>Deskripsi</label>
 <textarea name="description" class="form-control">{{ old('description',$product->description ?? '') }}</textarea>

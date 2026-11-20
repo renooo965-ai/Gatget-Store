@@ -12,7 +12,7 @@
 </select>
 <button class="btn btn-outline-primary">Cari / Filter</button>
 </form>
-<table class="table">
+<table class="table align-middle">
 <thead><tr><th>Kode</th><th>Produk</th><th>Kategori</th><th>Merek</th><th>Harga</th><th>Stok</th><th>Aksi</th></tr></thead>
 <tbody>
 @forelse($products as $product)

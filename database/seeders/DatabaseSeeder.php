@@ -5,6 +5,9 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Employee;
+use App\Models\Purchase;
+use App\Models\SalesTransaction;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -23,6 +26,16 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Test User',
                 'password' => Hash::make('password'),
+                'role' => 'customer',
+            ]
+        );
+
+        User::query()->firstOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Admin User',
+                'password' => Hash::make('12345678'),
+                'role' => 'admin',
             ]
         );
 
@@ -95,6 +108,49 @@ class DatabaseSeeder extends Seeder
                     'price' => 1000000 + ($i * 250000),
                     'stock' => $stock,
                     'description' => 'Produk gadget terbaru untuk kebutuhan sehari-hari.',
+                ]
+            );
+        }
+
+        $employee = Employee::query()->firstOrCreate(
+            ['email' => 'kasir@gadgetstore.test'],
+            [
+                'name' => 'Dewi Kasir',
+                'phone' => '081234567890',
+                'position' => 'Kasir',
+                'status' => 'active',
+                'hire_date' => '2026-01-10',
+                'address' => 'Toko Gadget Store',
+            ]
+        );
+
+        $firstProduct = Product::query()->orderBy('id')->first();
+        if ($firstProduct) {
+            Purchase::query()->firstOrCreate(
+                ['purchase_number' => 'PO-DEMO-001'],
+                [
+                    'supplier_name' => 'PT Gadget Distributor',
+                    'product_id' => $firstProduct->id,
+                    'quantity' => 10,
+                    'purchase_price' => 750000,
+                    'total_price' => 7500000,
+                    'purchased_at' => now()->subDays(5)->toDateString(),
+                    'notes' => 'Pembelian stok awal contoh',
+                ]
+            );
+
+            SalesTransaction::query()->firstOrCreate(
+                ['invoice_number' => 'INV-DEMO-001'],
+                [
+                    'customer_name' => 'Pelanggan Demo',
+                    'employee_id' => $employee->id,
+                    'product_id' => $firstProduct->id,
+                    'quantity' => 1,
+                    'unit_price' => $firstProduct->price,
+                    'total_price' => $firstProduct->price,
+                    'payment_method' => 'cash',
+                    'status' => 'completed',
+                    'transaction_date' => now()->subDay()->toDateString(),
                 ]
             );
         }
